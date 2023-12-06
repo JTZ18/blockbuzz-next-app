@@ -48,11 +48,11 @@ export interface Props {
 // Context Provider
 const EthersContextProvider: FC<Props> = ({ children }) => {
   const [provider, setProvider] = useState<null | ethers.providers.Web3Provider>(
-    window?.ethereum
-      ? new ethers.providers.Web3Provider(
-          window?.ethereum as ethers.providers.ExternalProvider
-        )
-      : null
+    // window?.ethereum
+    //   ? new ethers.providers.Web3Provider(
+    //       window?.ethereum as ethers.providers.ExternalProvider
+    //     )
+    //   : null
   );
   const { toast } = useToast()
 
@@ -64,14 +64,14 @@ const EthersContextProvider: FC<Props> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<null | string>(null);
 
-  // useEffect(() => {
-  //   // This code runs on the client-side after the component mounts,
-  //   // so it's safe to access the `window` object here
-  //   if (window.ethereum) {
-  //     const web3Provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
-  //     setProvider(web3Provider);
-  //   }
-  // }, []);
+  useEffect(() => {
+    // This code runs on the client-side after the component mounts,
+    // so it's safe to access the `window` object here
+    if (window.ethereum) {
+      const web3Provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
+      setProvider(web3Provider);
+    }
+  }, []);
 
   const showError = (content: null | string | React.ReactNode) => {
     if (error) {
@@ -82,7 +82,7 @@ const EthersContextProvider: FC<Props> = ({ children }) => {
     }
 
     if (content) {
-      setError(toast({ title: "Error", description: `${content}`}).id);
+      setError(toast({ title: "Error", description: content}).id);
     }
   };
 
@@ -246,7 +246,7 @@ const EthersContextProvider: FC<Props> = ({ children }) => {
     return () => {
       provider!.removeAllListeners("network");
     };
-  }, []);
+  }, [provider]);
 
   // useEffect(() => {
   //   const isUserAuthenticated = localStorage.getItem("isAuthenticated") === "true";

@@ -206,23 +206,23 @@ const fetchPageFromPost = async (
   );
 };
 
-export const getUserTags = async (content: string) => {
-  const addresses = _.uniq(
-    Array.from(content.matchAll(/\{(0x[A-Fa-f0-9]{40})\}/g))
-      .map((userTag) => userTag[1])
-      .filter((address) => ethers.utils.isAddress(address))
-  ).slice(0, 3); // max 3 user tags
+// export const getUserTags = async (content: string) => {
+//   const addresses = _.uniq(
+//     Array.from(content.matchAll(/\{(0x[A-Fa-f0-9]{40})\}/g))
+//       .map((userTag) => userTag[1])
+//       .filter((address) => ethers.utils.isAddress(address))
+//   ).slice(0, 3); // max 3 user tags
 
-  for (let i = 0; i < addresses.length; i++) {
-    if (!Boolean(await getSocialNetworkProfileDataAddress(addresses[i]))) {
-      throw Error(
-        `Invalid tag. Profile with address ${addresses[i]} is not registered.`
-      );
-    }
-  }
+//   for (let i = 0; i < addresses.length; i++) {
+//     if (!Boolean(await getSocialNetworkProfileDataAddress(addresses[i]))) {
+//       throw Error(
+//         `Invalid tag. Profile with address ${addresses[i]} is not registered.`
+//       );
+//     }
+//   }
 
-  return addresses;
-};
+//   return addresses;
+// };
 
 export const createStandalonePost = async (
   provider: ethers.providers.Web3Provider,
@@ -240,6 +240,7 @@ export const createStandalonePost = async (
     preparedData.userTags
   );
   await tx.wait();
+  console.log("YOOOOOOOOOOOOOOOO", tx)
   return tx;
 };
 
@@ -249,7 +250,7 @@ export const commentPost = async (
   targetPost: string
 ): Promise<null | SocialNetworkPost> => {
   if (content.length === 0) return null;
-  if (!(await isValidPost(targetPost))) return null;
+  // if (!(await isValidPost(targetPost))) return null;
 
   const preparedData: any = await preparePost(content);
   if (!preparedData) return null;
@@ -263,30 +264,31 @@ export const commentPost = async (
   return tx;
 };
 
-export const sharePost = async (
-  provider: ethers.providers.Web3Provider,
-  content: string,
-  targetPost: string
-): Promise<null | SocialNetworkPost> => {
-  if (content.length === 0) return null;
-  if (!(await isValidPost(targetPost))) return null;
+// export const sharePost = async (
+//   provider: ethers.providers.Web3Provider,
+//   content: string,
+//   targetPost: string
+// ): Promise<null | SocialNetworkPost> => {
+//   if (content.length === 0) return null;
+//   if (!(await isValidPost(targetPost))) return null;
 
-  const preparedData: any = await preparePost(content);
-  if (!preparedData) return null;
+//   const preparedData: any = await preparePost(content);
+//   if (!preparedData) return null;
 
-  const tx = await SocialNetwork.connect(provider.getSigner()).sharePost(
-    preparedData.JSONURL,
-    preparedData.userTags,
-    targetPost
-  );
-  await tx.wait();
-  return tx;
-};
+//   const tx = await SocialNetwork.connect(provider.getSigner()).sharePost(
+//     preparedData.JSONURL,
+//     preparedData.userTags,
+//     targetPost
+//   );
+//   await tx.wait();
+//   return tx;
+// };
 
 const preparePost = async (content: string, image?: string) => {
   if (content.length === 0) return null;
 
-  const userTags = await getUserTags(content);
+  //const userTags = await getUserTags(content);
+  const userTags = [] as string[];
   const JSONURL = await uploadJSONToIPFSAndGetLSP2JSONURL({ content, image });
 
   return { userTags, JSONURL };

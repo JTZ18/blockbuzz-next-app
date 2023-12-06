@@ -20,6 +20,7 @@ import { uploadImageToIPFS } from "../utils/ipfs-client"
 import { createStandalonePost } from "../utils/social-network-post"
 import { LoadingButton } from "./ui/LoadingButton"
 import EthersContext from "../context/EthersContext/EthersContext"
+import CachedProfilesAndPostsContext from "../context/CachedProfilesAndPostsContext/CachedProfilesAndPostsContext"
 import { Button } from "./ui/button"
 import {
   Dialog,
@@ -58,6 +59,7 @@ export function AddPost({ classNameButton = '' }: Props) {
   const [postImage, setPostImage] = useState<string>('');
   const [postFile, setPostFile] = useState<File>()
   const { provider, universalProfile } = useContext(EthersContext);
+  const { posts, refetchPost } = useContext(CachedProfilesAndPostsContext)
   const { toast } = useToast();
 
   const validate =

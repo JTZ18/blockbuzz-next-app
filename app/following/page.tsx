@@ -1,7 +1,5 @@
 import React from 'react';
 import Container from '../components/ui/container';
-import PostList from '../components/PostList';
-import ProfileCard from '../components/ProfileCard';
 
 const FollowingNonePage = () => {
   // Your component logic goes here
