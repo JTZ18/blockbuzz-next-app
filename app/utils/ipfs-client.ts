@@ -13,6 +13,8 @@ import _ from "lodash";
 // Types
 import type { Image } from "../types/Image";
 
+import fetch from "isomorphic-fetch"
+
 const KECCAK_256_HASH_FUNCTION = "0x6f357c6a";
 // https://2eff.lukso.dev/ipfs
 // https://api.2eff.lukso.dev/api/v0/add?stream-channels=true&pin=true&progress=false
