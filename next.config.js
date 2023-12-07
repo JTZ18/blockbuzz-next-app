@@ -27,5 +27,6 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['ipfs-utils'],
   },
+  trailingSlash: true
 }
 module.exports = nextConfig;

@@ -1,3 +1,4 @@
+'use client'
 // React
 import React, { PropsWithChildren, useMemo, useState } from "react";
 
@@ -15,6 +16,7 @@ import type { SocialNetworkProfile } from "../../types/SocialNetworkProfile";
 import type { SocialNetworkPost } from "../../types/SocialNetworkPost";
 import type { AddressToSocialNetworkProfileMapping } from "../../types/AddressToSocialNetworkProfileMapping";
 import type { AddressToSocialNetworkPostMapping } from "../../types/AddressToSocialNetworkPostMapping";
+import { SocialNetwork } from "../../utils/social-network";
 
 // Context Provider
 const CachedProfilesAndPostsContextProvider = ({
@@ -23,6 +25,12 @@ const CachedProfilesAndPostsContextProvider = ({
   const [profiles, setProfiles] =
     useState<AddressToSocialNetworkProfileMapping>({});
   const [posts, setPosts] = useState<AddressToSocialNetworkPostMapping>({});
+  const [signaller, setSignaller] = useState(false)
+
+  const toggleSignaller = () => {
+    setSignaller(prev => !prev);
+    console.log("signaller updated")
+  };
 
   const getProfile = async (
     address: string,
@@ -118,6 +126,7 @@ const CachedProfilesAndPostsContextProvider = ({
   const value: CachedProfilesAndPostsContextValue =
     useMemo<CachedProfilesAndPostsContextValue>(
       () => ({
+        signaller,
         posts,
         getProfile,
         getPost,
@@ -130,9 +139,10 @@ const CachedProfilesAndPostsContextProvider = ({
         refetchAll,
         refetchPosts,
         refetchProfiles,
-        refetchPost
+        refetchPost,
+        toggleSignaller
       }),
-      [profiles, posts]
+      [profiles, posts, signaller]
     );
 
   return (

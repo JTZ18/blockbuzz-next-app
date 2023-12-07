@@ -6,6 +6,7 @@ import EthersContext from "../context/EthersContext/EthersContext";
 import { commentPost } from "../utils/social-network-post";
 import { SocialNetworkPost } from "../types/SocialNetworkPost";
 import { Loader2 } from "lucide-react";
+import { useSignaller } from "../context/CachedProfilesAndPostsContext/useSignaller";
 
 interface Props {
   post: SocialNetworkPost;
@@ -15,6 +16,7 @@ const AddComment: React.FC<Props> = ({ post }) => {
   const { provider, universalProfile } = useContext(EthersContext);
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
+  const { signaller, toggle } = useSignaller();
 
   const authenticated =
   provider &&
@@ -35,6 +37,7 @@ const AddComment: React.FC<Props> = ({ post }) => {
       setLoading(true)
       const res = await commentPost(provider, content, post.address); // return me the address of the post
       console.log("comment result", res)
+      toggle()
       setLoading(false)
     } catch {
       setLoading(false)

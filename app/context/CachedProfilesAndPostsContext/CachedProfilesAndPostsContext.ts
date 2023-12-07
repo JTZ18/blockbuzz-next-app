@@ -1,3 +1,4 @@
+'use client'
 // React
 import React, { createContext } from "react";
 
@@ -9,6 +10,7 @@ import { AddressToSocialNetworkPostMapping } from "../../types/AddressToSocialNe
 
 export interface CachedProfilesAndPostsContextValue {
   posts: AddressToSocialNetworkPostMapping;
+  signaller: boolean;
   getProfile: (
     address: string,
     ignoreCache?: boolean
@@ -27,10 +29,12 @@ export interface CachedProfilesAndPostsContextValue {
   refetchPosts: () => Promise<void>;
   refetchProfiles: () => Promise<void>;
   refetchPost: (postAddress: string) => Promise<void>;
+  toggleSignaller: () => void;
 }
 
 const CachedProfilesAndPostsContext =
   createContext<CachedProfilesAndPostsContextValue>({
+    signaller: false,
     posts: {},
     getProfile: async () => null,
     getAllProfilesFromCache: () => null,
@@ -44,6 +48,8 @@ const CachedProfilesAndPostsContext =
     refetchPosts: async () => {},
     refetchProfiles: async () => {},
     refetchPost: async () => {},
+    toggleSignaller: () => {},
+
   });
 
 export default CachedProfilesAndPostsContext;

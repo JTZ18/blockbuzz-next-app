@@ -32,16 +32,14 @@ const ProfileCard = () => {
   const pathname = usePathname()
   const parts = pathname.split('/');
   let profileAddress: string = ''
-  if ((parts.length == 3) && (parts[1] == 'profile')) {
+  if ((parts.length >= 3) && (parts[1] == 'profile')) {
     profileAddress = parts[2];
   };
 
   const handlefetchProfile = async (address: string) => {
-    console.log("address", address)
     try {
       setLoading(true);
       const retrievedProfile = await fetchProfile(address, true)
-      console.log("retreieced profile", retrievedProfile)
       setProfile(retrievedProfile)
       setLoading(false)
     } catch (e) {

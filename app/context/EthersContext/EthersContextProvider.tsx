@@ -1,3 +1,4 @@
+'use client'
 // React
 import React, { FC, useEffect, useMemo, useState } from "react";
 

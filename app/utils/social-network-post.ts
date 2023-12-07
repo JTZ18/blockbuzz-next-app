@@ -206,23 +206,23 @@ const fetchPageFromPost = async (
   );
 };
 
-// export const getUserTags = async (content: string) => {
-//   const addresses = _.uniq(
-//     Array.from(content.matchAll(/\{(0x[A-Fa-f0-9]{40})\}/g))
-//       .map((userTag) => userTag[1])
-//       .filter((address) => ethers.utils.isAddress(address))
-//   ).slice(0, 3); // max 3 user tags
+export const getUserTags = async (content: string) => {
+  const addresses = _.uniq(
+    Array.from(content.matchAll(/\{(0x[A-Fa-f0-9]{40})\}/g))
+      .map((userTag) => userTag[1])
+      .filter((address) => ethers.utils.isAddress(address))
+  ).slice(0, 3); // max 3 user tags
 
-//   for (let i = 0; i < addresses.length; i++) {
-//     if (!Boolean(await getSocialNetworkProfileDataAddress(addresses[i]))) {
-//       throw Error(
-//         `Invalid tag. Profile with address ${addresses[i]} is not registered.`
-//       );
-//     }
-//   }
+  for (let i = 0; i < addresses.length; i++) {
+    if (!Boolean(await getSocialNetworkProfileDataAddress(addresses[i]))) {
+      throw Error(
+        `Invalid tag. Profile with address ${addresses[i]} is not registered.`
+      );
+    }
+  }
 
-//   return addresses;
-// };
+  return addresses;
+};
 
 export const createStandalonePost = async (
   provider: ethers.providers.Web3Provider,
@@ -232,7 +232,6 @@ export const createStandalonePost = async (
   if (content.length === 0) return null;
 
   const preparedData: any = await preparePost(content, image);
-  console.log(preparedData.JSONURL)
   if (!preparedData) return null;
 
   const tx = await SocialNetwork.connect(provider.getSigner()).createPost(
@@ -260,6 +259,7 @@ export const commentPost = async (
     preparedData.userTags,
     targetPost
   );
+  console.log("enter handle post")
   await tx.wait();
   return tx;
 };
@@ -287,8 +287,8 @@ export const commentPost = async (
 const preparePost = async (content: string, image?: string) => {
   if (content.length === 0) return null;
 
-  //const userTags = await getUserTags(content);
-  const userTags = [] as string[];
+  // const userTags = await getUserTags(content);
+  const userTags = [];
   const JSONURL = await uploadJSONToIPFSAndGetLSP2JSONURL({ content, image });
 
   return { userTags, JSONURL };

@@ -7,6 +7,14 @@ import { SocialNetwork } from '../utils/social-network';
 import _ from 'lodash';
 import CachedProfilesAndPostsContext from '../context/CachedProfilesAndPostsContext/CachedProfilesAndPostsContext';
 import { usePosts } from '../context/CachedProfilesAndPostsContext/usePosts';
+import { useSignaller } from '../context/CachedProfilesAndPostsContext/useSignaller';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./ui/accordion"
+import { Page } from '../types/Page';
 
 interface CommentListProps {
   // items: Post[];
@@ -35,10 +43,11 @@ interface CommentListProps {
 const CommentsList: React.FC<CommentListProps> = ({ referencePostAddress = '' }) => {
   const [comments, setComments] = useState<(SocialNetworkPost | null)[]>([]);
   const posts = usePosts();
-  const postsMap = posts.posts
+  const { signaller, toggle } = useSignaller();
+
 
   function filterPostsByReference() {
-    const postsArray = Object.values(postsMap);
+    const postsArray = Object.values(posts.posts);
     const filteredComments: SocialNetworkPost[] = postsArray.filter(post => post?.referencedPost === referencePostAddress);
     setComments(filteredComments);
     console.log(filteredComments)
@@ -46,13 +55,23 @@ const CommentsList: React.FC<CommentListProps> = ({ referencePostAddress = '' })
 
   useEffect(() => {
     filterPostsByReference()
-  }, [])
+  }, [signaller])
 
   return (
     <div className="flex flex-col items-center justify-start space-y-4 my-4 w-full">
-      {comments.map((item) => (
+      {/* {comments.map((item) => (
         item?.referencedPost === referencePostAddress && <Comment key={item?.address} data={item} />
-      ))}
+      ))} */}
+        <Accordion type="single" collapsible className='w-full'>
+          <AccordionItem value="item-1">
+            {comments && <AccordionTrigger>{`💬 ${comments.length} Comments`}</AccordionTrigger>}
+            <AccordionContent>
+              {comments.map((item) => (
+                item?.referencedPost === referencePostAddress && <Comment key={item?.address} data={item} />
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
     </div>
   )
 }

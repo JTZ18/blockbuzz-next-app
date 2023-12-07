@@ -15,6 +15,8 @@ import { Label } from "./ui/label"
 import AddComment from "./AddComment";
 import { AddPost } from "./AddPost";
 import { usePathname } from "next/navigation";
+import { AddressToSocialNetworkPostMapping } from "../types/AddressToSocialNetworkPostMapping";
+import { useSignaller } from "../context/CachedProfilesAndPostsContext/useSignaller";
 
 // const posts = [
 //   {
@@ -91,15 +93,16 @@ import { usePathname } from "next/navigation";
 // }
 
 const PostList = () => {
-  const [posts, setPosts] = useState<(SocialNetworkPost | null)[]>([]);
+  const [currentPosts, setPosts] = useState<(SocialNetworkPost | null)[]>([]);
   const [isLoading, setIsLoading] = useState(false)
-  const { getPost } = useContext(CachedProfilesAndPostsContext);
+  const { getPost, posts } = useContext(CachedProfilesAndPostsContext);
   const pathname = usePathname(); // extract profile address from url path if the user is in profile mode
   const parts = pathname.split('/');
   let profileAddress: string = ''
-  if ((parts.length == 3) && (parts[1] == 'profile')) {
+  if ((parts.length >= 3) && (parts[1] == 'profile')) {
     profileAddress = parts[2];
   };
+  const { signaller, toggle } = useSignaller();
 
 
   const fetchPostAddresses = async (): Promise<null | Page<string>> => {
@@ -181,6 +184,7 @@ const PostList = () => {
 
   const getPostsOfProfile = async () => {
     if (!profileAddress) return
+    console.log("triggered getpostsofprofile")
     setIsLoading(true);
     const page = await fetchPostAddressesOfUser( profileAddress );
     console.log(page);
@@ -214,6 +218,17 @@ const PostList = () => {
     getPosts();
   }, []);
 
+  useEffect(() => {
+    () => {
+      console.log("postlist refetching posts")
+      getPosts().then(() => {
+        // let postsArray: SocialNetworkPost[] = Object.values(posts);
+        // setPosts(postsArray)
+        console.log("we refetched posts ish")
+      })
+    }
+  }, [signaller, getPosts, posts]); // TODO: care that it does not recursivvely loop
+
   // run get postsData from addresses
 
   return (
@@ -221,7 +236,7 @@ const PostList = () => {
       {/* <Button onClick={getPosts}>Get Posts</Button> */}
 
       <div className="grid grid-col-1 gap4">
-        {posts?.map((item) => (
+        {currentPosts?.map((item) => (
           <PostCard key={item?.address} data={item} />
         ))}
       </div>

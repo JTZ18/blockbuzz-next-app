@@ -33,6 +33,7 @@ import {
 } from "./ui/dialog"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
+import { useSignaller } from "../context/CachedProfilesAndPostsContext/useSignaller"
 
 const FormSchema = z.object({
   post: z
@@ -61,6 +62,7 @@ export function AddPost({ classNameButton = '' }: Props) {
   const { provider, universalProfile } = useContext(EthersContext);
   const { posts, refetchPost } = useContext(CachedProfilesAndPostsContext)
   const { toast } = useToast();
+  const { signaller, toggle } = useSignaller();
 
   const validate =
   provider &&
@@ -84,35 +86,49 @@ export function AddPost({ classNameButton = '' }: Props) {
   };
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (!validate) {
-      toast({
-        title: "No Universal Profile detected",
-        description: "Please connect profile or download the UP Extension",
-        variant: "destructive",
-      })
-      return
-     }
-    setLoading(true);
-    // if (!postContent && !postImage) return;
-    // upload image to IPFS and get back imageurl link
-    let image;
-    if (postFile) {
-      const uploadResult = await uploadImageToIPFS(postFile);
-      if (uploadResult !== null) {
-        image = uploadResult;
+    try {
+      if (!validate) {
+        toast({
+          title: "No Universal Profile detected",
+          description: "Please connect profile or download the UP Extension",
+          variant: "destructive",
+        })
+        return
+       }
+      setLoading(true);
+      // if (!postContent && !postImage) return;
+      // upload image to IPFS and get back imageurl link
+      let image;
+      if (postFile) {
+        const uploadResult = await uploadImageToIPFS(postFile);
+        if (uploadResult !== null) {
+          image = uploadResult;
+        }
       }
+
+      const newPost = await createStandalonePost(provider, data.post, image);
+      if (newPost) {
+        // await refetchPost(Object.keys(posts)[0]); // This will trigger a re-render of components consuming the posts state
+        toggle()
+        // Clear the form fields and image preview
+        form.reset();
+        setPostImage('');
+        setPostFile(undefined);
+      }
+
+      setLoading(false);
+      toast({
+        title: "You submitted the following values:",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          </pre>
+        ),
+      })
+    } catch (e) {
+      setLoading(false)
     }
 
-    await createStandalonePost(provider, data.post, image);
-    setLoading(false);
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
   }
 
   return (
