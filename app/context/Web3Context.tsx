@@ -1,3 +1,4 @@
+'use client'
 import { createContext, FC, ReactNode, useContext } from "react";
 import useWeb3Provider, { IWeb3State } from "../hooks/useWeb3Provider";
 

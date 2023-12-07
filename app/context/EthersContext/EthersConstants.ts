@@ -1,3 +1,4 @@
+'use client'
 // Config
 import { CHAIN_ID } from "../../config";
 

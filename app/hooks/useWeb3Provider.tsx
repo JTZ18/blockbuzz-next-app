@@ -1,3 +1,4 @@
+'use client'
 import { BrowserProvider, ethers, JsonRpcSigner } from "ethers";
 import { useToast  } from "../components/ui/use-toast";
 import { useCallback, useEffect, useState } from "react";

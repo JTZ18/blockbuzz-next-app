@@ -1,3 +1,4 @@
+'use client'
 import { useContext, useCallback } from 'react';
 import CachedProfilesAndPostsContext from './CachedProfilesAndPostsContext';
 
