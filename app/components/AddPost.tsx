@@ -133,9 +133,16 @@ export function AddPost({ classNameButton = '' }: Props) {
 
   return (
     <Dialog>
+      {universalProfile ? (
       <DialogTrigger asChild>
-        <Button variant="default" className={`${classNameButton}`}>Create Post</Button>
+      <Button variant="default" className={`${classNameButton}`}>Create Post</Button>
       </DialogTrigger>
+      ) : (
+      <DialogTrigger asChild>
+      <Button variant="default" disabled className={`${classNameButton} bg-slate-400 cursor-not-allowed`}>Connect your UP to Create Post</Button>
+      </DialogTrigger>
+      )}
+     
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create a post</DialogTitle>
