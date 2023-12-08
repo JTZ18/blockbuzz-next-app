@@ -38,8 +38,8 @@ const LeftNavBar = () => {
       console.log('pageof followers', pageOfFollowers)
   
       // Extract items from pageOfFollowers
-      const followerItems = Object.values(pageOfFollowers.items);
-      const followingItems = Object.values(pageOfFollowing.items);
+      const followerItems = Object.values(pageOfFollowers?.items ?? []);
+      const followingItems = Object.values(pageOfFollowing?.items ?? []) ;
   
       // Combine followerItems and followingItems into one array
       const allItems = [...followerItems, ...followingItems];

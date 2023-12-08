@@ -24,7 +24,7 @@ const ProfileButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src={universalProfile?.profileImage?.[0].url} />
+          <AvatarImage src={universalProfile?.profileImage?.[0]?.url} />
           <AvatarFallback>{universalProfile?.name.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

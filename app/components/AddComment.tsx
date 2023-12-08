@@ -31,6 +31,7 @@ const AddComment: React.FC<Props> = ({ post }) => {
 
   const handlePost = async (event: any) => {
     event.preventDefault()
+    console.log(authenticated)
     if (!authenticated) return;
     if (content.length === 0) return;
     try {

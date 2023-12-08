@@ -96,7 +96,7 @@ const ProfileCard = () => {
 
         <Card className='flex flex-col justify-center items-center w-full p-6'>
           <Avatar>
-            <AvatarImage src={profile?.profileImage?.[0].url} alt="profile-picture" />
+            <AvatarImage src={profile?.profileImage?.[0]?.url} alt="profile-picture" />
             <AvatarFallback>{profile?.name.slice(0,2)}</AvatarFallback>
           </Avatar>
           <CardHeader className='pt-4 pb-0'>
