@@ -1,5 +1,5 @@
 'use client'
-import React, { Suspense, useContext, useEffect, useState } from "react";
+import React, { Suspense, useContext, useEffect, useState, useCallback } from "react";
 import PostCard from "./ui/PostCard";
 import { Post } from "../types/types";
 import { SocialNetworkPost } from "../types/SocialNetworkPost";
@@ -17,6 +17,7 @@ import { AddPost } from "./AddPost";
 import { usePathname } from "next/navigation";
 import { AddressToSocialNetworkPostMapping } from "../types/AddressToSocialNetworkPostMapping";
 import { useSignaller } from "../context/CachedProfilesAndPostsContext/useSignaller";
+import EthersContext from "../context/EthersContext/EthersContext";
 
 // const posts = [
 //   {
@@ -103,6 +104,7 @@ const PostList = () => {
     profileAddress = parts[2];
   };
   const { signaller, toggle } = useSignaller();
+  const { provider, universalProfile } = useContext(EthersContext);
 
 
   const fetchPostAddresses = async (): Promise<null | Page<string>> => {
@@ -159,7 +161,7 @@ const PostList = () => {
   };
 
   // run get postsData from addresses
-  const getPosts = async () => {
+  const getPosts = useCallback(async () => {
     setIsLoading(true);
     const page = await fetchPostAddresses();
     console.log(page);
@@ -180,7 +182,7 @@ const PostList = () => {
       }
     }
     setIsLoading(false);
-  };
+  }, [getPost]);
 
   const getPostsOfProfile = async () => {
     if (!profileAddress) return
@@ -229,7 +231,6 @@ const PostList = () => {
     }
   }, [signaller, getPosts, posts]); // TODO: care that it does not recursivvely loop
 
-  // run get postsData from addresses
 
   return (
     <div className="flex flex-col items-center justify-center space-y-4 mt-4">

@@ -67,7 +67,7 @@ const createPermissionFunctions = async (
       IUniversalProfile,
       provider.getSigner()
     );
-    const data = await upContract["getData(bytes32[])"](permissionData.keys);
+    const data = await upContract["getDataBatch(bytes32[])"](permissionData.keys);
 
     try {
       const addresses = ethers.utils.defaultAbiCoder.decode(
@@ -94,7 +94,7 @@ const createPermissionFunctions = async (
 
   const setNecessaryPermissions = async (): Promise<boolean> => {
     const up = new ethers.Contract(
-      profile.options.address as string,
+      profile.address as string,
       IUniversalProfile,
       provider.getSigner()
     );
