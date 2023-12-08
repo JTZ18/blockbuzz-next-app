@@ -20,6 +20,12 @@ import {Sheet,
   SheetFooter,
   SheetTitle,
   SheetDescription, } from "./ui/sheet";
+  import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+  } from "./ui/tooltip"
 import ProfileButton from "./ui/ProfileButton";
 import ConnectWalletButton from "./ConnectWalletButton";
 import { IWeb3Context, useWeb3Context } from '../context/Web3Context'
@@ -52,7 +58,7 @@ const Header = () => {
 
 
   return (
-    <header className="sm:flex sm:justify-between py-3 px-4 border-b">
+    <header className="sm:flex sm:justify-between py-3 px-4 border-b fixed w-full bg-slate-950" style={{zIndex: 1}}>
       <Container>
         <div className="relative px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between w-full">
           <div className="flex items-center">
@@ -85,9 +91,9 @@ const Header = () => {
                         {`Profile`}
                       </Link>
                       ) : (
-                      <span className="block px-2 py-1 text-lg text-gray-500 cursor-not-allowed">
-                        {`Profile`}
-                      </span>
+                        <span className="block px-2 py-1 text-lg text-gray-500 cursor-not-allowed">
+                          {`Profile`}
+                        </span>
                     )}
                     {universalProfile ? (
                       <Link
@@ -141,9 +147,18 @@ const Header = () => {
                   {`Profile`}
                 </Link>
               ) : (
-                <span className="text-sm font-medium text-gray-500 cursor-not-allowed">
-                  {`Profile`}
-                </span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                    <span className="text-sm font-medium text-gray-500 cursor-not-allowed">
+                      {`Profile`}
+                    </span>
+                    </TooltipTrigger>
+                  <TooltipContent>
+                   <p>Connect your UP</p>
+                 </TooltipContent>
+               </Tooltip>
+             </TooltipProvider>
               )}
             </Button>
             <Button asChild variant="ghost">
@@ -157,9 +172,18 @@ const Header = () => {
                   {`Following`}
                 </Link>
               ) : (
+                <TooltipProvider>
+                <Tooltip>
+                <TooltipTrigger asChild>
                 <span className="text-sm font-medium text-gray-500 cursor-not-allowed">
                   {`Following`}
                 </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                 <p>Connect your UP</p>
+               </TooltipContent>
+             </Tooltip>
+           </TooltipProvider>
               )}
             </Button>
           </nav>
