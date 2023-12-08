@@ -28,7 +28,7 @@ import CachedProfilesAndPostsContext from "../context/CachedProfilesAndPostsCont
 // Contract
 import { SocialNetwork } from "../utils/social-network";
 
-const RegistrationDialog = () => {
+const RegistrationDialog = ({showModal, setShowModal}) => {
   const [hasNecessaryPermissions, setHasPermissions] = useState<
     undefined | boolean
   >(undefined);
@@ -67,7 +67,7 @@ const RegistrationDialog = () => {
       await tx.wait();
       await initSocialProfileData();
     } catch (e) {
-      console.error("❌ register failed: ", e);
+      // console.error("❌ register failed: ", e);
       setRegistrationInProgress(false);
       return false;
     }
@@ -97,72 +97,28 @@ const RegistrationDialog = () => {
 
   const onAgree = async () => {
     if (!(await register())) {
-      toast.error(`Registration failed`);
+      // toast.error(`Registration failed`);
       return;
     }
     if (!(await setPermissions())) {
-      toast.error(`Setting necessary permissions failed`);
+      // toast.error(`Setting necessary permissions failed`);
       return;
     }
   };
 
   return (
     <>
-      {/* <Dialog
-        open={
-          Boolean(provider) &&
-          Boolean(universalProfile) &&
-          !registrationInProgress &&
-          !settingPermissionsInProgress &&
-          (hasNecessaryPermissions === false ||
-            !universalProfile!.socialNetworkProfileDataERC725Contract)
-        }
-        TransitionComponent={SlideUpTransition}
-        keepMounted
-      >
-        <DialogTitle>Welcome {universalProfile?.name ?? ""}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To use the platform we need to register your universal profile
-            address and set a CALL permission. Do you agree?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onDisagree} sx={{ color: "black" }}>
-            Disagree
-          </Button>
-          <Button onClick={onAgree} sx={{ color: "black" }}>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <LoadingBackdrop
-        open={registrationInProgress}
-        text={
-          "Waiting for the completion of registering the universal profile address..."
-        }
-      />
-
-      <LoadingBackdrop
-        open={settingPermissionsInProgress}
-        text={
-          "Waiting for the completion of setting the necessary CALL permission on the universal profile..."
-        }
-      /> */}
-      <AlertDialog>
-        <AlertDialogTrigger>Open</AlertDialogTrigger>
+      <AlertDialog open={showModal} onOpenChange={setShowModal}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>Hello!</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your account
-              and remove your data from our servers.
+              To register you to our platform, we require you to give our platform permissions to register your account to BlockBuzz. Please take a look at your UP to confirm the registration transaction
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Continue</AlertDialogAction>
+            <AlertDialogCancel onClick={onDisagree}>Disagree</AlertDialogCancel>
+            <AlertDialogAction onClick={onAgree}>Agree</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

@@ -1,9 +1,13 @@
+'use client'
 import Image from 'next/image'
 import Container from './components/ui/container'
 import PostList from './components/PostList'
 import { ThirdwebProvider } from './components/ThirdwebProvider';
 import _ from "lodash";
 import { AddPost } from './components/AddPost'
+import { useEffect, useState, useContext } from 'react';
+import RegistrationDialog from './components/RegistrationDialog';
+import EthersContext from './context/EthersContext/EthersContext';
 
 
 const posts = [
@@ -37,12 +41,22 @@ const posts = [
 ];
 
 
-export default async function Home() {
+export default function Home() {
 
   // const posts = await getPosts()
   // const posts = await fetchPosts()
   // console.log(posts);
   //PostList items={posts} />
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false)
+  const { universalProfile } = useContext(EthersContext);
+
+  useEffect(() => {
+    if(!universalProfile) return
+    if (universalProfile!.socialNetworkProfileDataERC725Contract) return;
+    console.log('open register modal')
+    setShowRegistrationModal(true)
+
+  }, [universalProfile])
 
   return (
     <Container>
@@ -51,6 +65,7 @@ export default async function Home() {
           <div className='flex w-full items-center justify-center mt-6'>
             <AddPost classNameButton='max-w-sm' />
           </div>
+          <RegistrationDialog showModal={showRegistrationModal} setShowModal={setShowRegistrationModal}/>
           <PostList />
         </div>
       </div>

@@ -38,7 +38,7 @@ const PostCard: React.FC<PostCard> = ({ data }) => {
         <CardContent className="flex">
           <div className="flex mr-6">
             <Avatar>
-              <AvatarImage src={data?.profileImage?.[0].url} />
+              <AvatarImage src={data?.profileImage?.[0]?.url} />
               <AvatarFallback>{data?.profileName.slice(0,2).toUpperCase()}</AvatarFallback>
             </Avatar>
           </div>

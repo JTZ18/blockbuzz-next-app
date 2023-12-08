@@ -1,5 +1,5 @@
 'use client'
-import React, { Suspense, useContext, useEffect, useState } from "react";
+import React, { Suspense, useContext, useEffect, useState, useCallback } from "react";
 import PostCard from "./ui/PostCard";
 import { Post } from "../types/types";
 import { SocialNetworkPost } from "../types/SocialNetworkPost";
@@ -166,7 +166,7 @@ const PostList = () => {
   };
 
   // run get postsData from addresses
-  const getPosts = async () => {
+  const getPosts = useCallback(async () => {
     setIsLoading(true);
     const page = await fetchPostAddresses();
     console.log(page);
@@ -187,7 +187,7 @@ const PostList = () => {
       }
     }
     setIsLoading(false);
-  };
+  }, [getPost]);
 
   const getPostsOfProfile = async () => {
     if (!profileAddress) return
@@ -237,67 +237,6 @@ const PostList = () => {
   }, [signaller, getPosts, posts]); // TODO: care that it does not recursivvely loop
 
   // run get postsData from addresses
-
-    useEffect(() => {
-    const validate = (): boolean =>
-    Boolean(provider) && Boolean(universalProfile);
-
-    const onAgree = async () => {
-      if (!(await register())) {
-        // toast.error(`Registration failed`);
-        return;
-      }
-      if (!(await setPermissions())) {
-        // toast.error(`Setting necessary permissions failed`);
-        return;
-      }
-    };
-
-    const setPermissions = async (): Promise<boolean> => {
-      if (!validate()) return false;
-      if (await universalProfile!.hasNecessaryPermissions()) return true;
-
-      const hasPermissions = await universalProfile!.setNecessaryPermissions();
-      // setHasPermissions(hasPermissions);
-
-      return hasPermissions;
-    };
-
-    const register = async (): Promise<boolean> => {
-      console.log("enter register")
-      if (!validate()) return false;
-      console.log("pass validation of register")
-      if (universalProfile!.socialNetworkProfileDataERC725Contract) return true; // already registered
-      console.log("passed check user is not registered yet")
-
-      try {
-        console.log('attempt to register')
-        const tx = await SocialNetwork.connect(provider!.getSigner()).register();
-        await tx.wait();
-        await initSocialProfileData();
-      } catch (e) {
-        console.error("❌ register failed: ", e);
-        return false;
-      }
-
-      await refetchAll();
-      return true;
-    };
-
-    const main = async () => {
-      console.log("universal profile connected", universalProfile)
-      await onAgree()
-      console.log("onconnect button finished")
-      const isRegistered = await universalProfile?.hasNecessaryPermissions()
-      console.log("registerd state?", isRegistered)
-      if (!isRegistered) {
-        console.log("prompt user to register will cost gas")
-        await onAgree()
-      }
-    }
-
-    main()
-  }, [universalProfile, initSocialProfileData, provider, refetchAll])
 
   return (
     <div className="flex flex-col items-center justify-center space-y-4 mt-4">

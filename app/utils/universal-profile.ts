@@ -67,7 +67,7 @@ const createPermissionFunctions = async (
       IUniversalProfile,
       provider.getSigner()
     );
-    const data = await upContract["getBatchData(bytes32[])"](permissionData.keys);
+    const data = await upContract["getDataBatch(bytes32[])"](permissionData.keys);
 
     try {
       const addresses = ethers.utils.defaultAbiCoder.decode(
